@@ -1,9 +1,11 @@
-extends Node2D
+class_name FloatingWord
+extends RigidBody2D
 
 signal word_became_inactive(word_instance)
 
 @onready var label: Label = $Label
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var speed: float = 50.0
 var direction: Vector2 = Vector2.ZERO
@@ -11,14 +13,17 @@ var word: String = ""
 var is_active: bool = true
 var screen_center: Vector2
 
+var _is_in_active_zone: bool = false
+
 func _ready():
 	# Animation d'apparition
 	animation_player.play("fade_in")
 	screen_center = Vector2.ZERO  # Le centre du jeu est maintenant en (0,0)
 
-func _process(delta):
-	# Déplacer le mot vers le centre
-	global_position += direction * speed * delta
+func _physics_process(delta):
+	# Déplacer le mot vers le centre en utilisant move_and_collide
+	var velocity = direction * speed
+	move_and_collide(velocity * delta)
 	
 	# Vérifier si le mot est à moins de 100px du centre
 	var distance_to_center = global_position.distance_to(screen_center)
@@ -51,6 +56,15 @@ func get_word() -> String:
 	return word
 
 func is_in_active_zone() -> bool:
-	# Vérifier si le mot est dans le carré de 500x500 pixels au centre
-	var distance_to_center = global_position.distance_to(screen_center)
-	return distance_to_center <= 250  # 250 = 500/2 (rayon du carré)
+	return _is_in_active_zone
+
+func set_active():
+	_is_in_active_zone = true
+
+func _on_label_resized() -> void:
+	if label == null: return
+	var word_width = label.size.x
+	var word_height = label.size.y
+	var rect_shape = RectangleShape2D.new()
+	rect_shape.size = Vector2(word_width, word_height)
+	collision_shape.shape = rect_shape

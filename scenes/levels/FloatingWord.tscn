@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bvn8x7y2k3m4n"]
+[gd_scene load_steps=6 format=3 uid="uid://bvn8x7y2k3m4n"]
 
 [ext_resource type="Script" uid="uid://cl02q7ctpjqol" path="res://scenes/levels/FloatingWord.gd" id="1_script"]
 
@@ -39,19 +39,25 @@ _data = {
 &"fade_out": SubResource("Animation_fade_out")
 }
 
-[node name="FloatingWord" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(200, 40)
+
+[node name="FloatingWord" type="RigidBody2D"]
+collision_mask = 0
+gravity_scale = 0.0
 script = ExtResource("1_script")
 
 [node name="Label" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 100.0
-offset_bottom = 20.0
+offset_left = -0.5
+offset_top = -17.0
+offset_right = 0.5
+offset_bottom = 17.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -59,7 +65,6 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 24
-text = "WORD"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -67,3 +72,8 @@ vertical_alignment = 1
 libraries = {
 &"": SubResource("AnimationLibrary_1")
 }
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[connection signal="resized" from="Label" to="." method="_on_label_resized"]

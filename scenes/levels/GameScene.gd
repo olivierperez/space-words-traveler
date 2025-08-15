@@ -3,6 +3,7 @@ extends Node2D
 @onready var word_spawn_timer: Timer = $WordSpawnTimer
 @onready var word_container: Node2D = $WordContainer
 @onready var current_input_label: Label = $UI/CurrentInputLabel
+@onready var active_zone: Area2D = $GameZones/ActiveZone
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
 var words = ["ATTAQUER", "DEFENDRE", "BOUCLIER", "PLANETE", "VAISSEAU", "CIVILISATION", "SURVIVRE", "VOYAGER", "MOTS", "LUNETTES", "FAIBLESSE", "CHARGER", "CREATURES", "HABITE", "HABITABLE"]
@@ -15,10 +16,13 @@ func _ready():
 	screen_size = get_viewport().get_visible_rect().size
 	word_spawn_timer.timeout.connect(_spawn_word)
 	word_spawn_timer.start()
+	
+	active_zone.body_entered.connect(_body_entered)
+	
 	set_process_input(true)
 
 func _spawn_word():
-	var word_instance = word_scene.instantiate()
+	var word_instance: FloatingWord = word_scene.instantiate()
 	word_container.add_child(word_instance)
 	
 	# Choisir un mot aléatoire
@@ -37,7 +41,7 @@ func _spawn_word():
 	# Ajouter le mot à la liste des mots actifs
 	active_words.append(word_instance)
 	
-	# Connecter le signal pour être notifié quand le mot devient inactif
+	# Connecter les signaux
 	word_instance.word_became_inactive.connect(_on_word_became_inactive)
 
 func _get_random_border_position() -> Vector2:
@@ -47,7 +51,7 @@ func _get_random_border_position() -> Vector2:
 	var half_width = screen_size.x / 2
 	var half_height = screen_size.y / 2
 
-	match side
+	match side:
 		0:  # Haut
 			return Vector2(randf_range(-half_width, half_width), -half_height - 50)
 		1:  # Droite
@@ -93,6 +97,15 @@ func _check_word():
 	
 	print("Mot incorrect ou déjà disparu : ", current_input)
 
+func _body_entered(body: RigidBody2D) -> void:
+	if body is FloatingWord:
+		body.set_active()
+
 func _on_word_became_inactive(word_instance):
-	# Retirer le mot inactif de la liste
 	active_words.erase(word_instance)
+
+func _on_word_entered_active_zone(word_instance):
+	print("Mot entré dans la zone active: ", word_instance.get_word())
+
+func _on_word_exited_active_zone(word_instance):
+	print("Mot sorti de la zone active: ", word_instance.get_word())

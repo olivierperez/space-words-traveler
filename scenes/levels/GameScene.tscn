@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8yay001a2b3c"]
+[gd_scene load_steps=4 format=3 uid="uid://c8yay001a2b3c"]
 
 [ext_resource type="Script" uid="uid://cap7xh1rfchn4" path="res://scenes/levels/GameScene.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://uhiusabusitx" path="res://assets/image/space_background.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(500, 500)
 
 [node name="GameScene" type="Node2D"]
 script = ExtResource("1_script")
@@ -43,6 +46,13 @@ offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.5, 0.5, 0.5, 0.3)
+
+[node name="ActiveZone" type="Area2D" parent="GameZones"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GameZones/ActiveZone"]
+shape = SubResource("RectangleShape2D_1")
+debug_color = Color(0, 1, 0, 0.41960785)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
