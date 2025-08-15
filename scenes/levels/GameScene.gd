@@ -38,6 +38,9 @@ func _spawn_word():
 	
 	# Ajouter le mot à la liste des mots actifs
 	active_words.append(word_instance)
+	
+	# Connecter le signal pour être notifié quand le mot devient inactif
+	word_instance.word_became_inactive.connect(_on_word_became_inactive)
 
 func _get_random_border_position() -> Vector2:
 	var side = randi() % 4  # 0: haut, 1: droite, 2: bas, 3: gauche
@@ -84,3 +87,7 @@ func _check_word():
 			return
 	
 	print("Mot incorrect ou déjà disparu : ", current_input)
+
+func _on_word_became_inactive(word_instance):
+	# Retirer le mot inactif de la liste
+	active_words.erase(word_instance)

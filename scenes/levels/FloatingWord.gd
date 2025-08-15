@@ -1,5 +1,7 @@
 extends Node2D
 
+signal word_became_inactive(word_instance)
+
 @onready var label: Label = $Label
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
@@ -22,6 +24,7 @@ func _process(delta):
 	var distance_to_center = global_position.distance_to(screen_center)
 	if distance_to_center < 100 and is_active:
 		is_active = false
+		word_became_inactive.emit(self)
 		animation_player.play("fade_out")
 		await animation_player.animation_finished
 		queue_free()
