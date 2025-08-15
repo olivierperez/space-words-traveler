@@ -14,7 +14,7 @@ var screen_center: Vector2
 func _ready():
 	# Animation d'apparition
 	animation_player.play("fade_in")
-	screen_center = get_viewport().get_visible_rect().size / 2
+	screen_center = Vector2.ZERO  # Le centre du jeu est maintenant en (0,0)
 
 func _process(delta):
 	# Déplacer le mot vers le centre
@@ -29,10 +29,12 @@ func _process(delta):
 		await animation_player.animation_finished
 		queue_free()
 	
-	# Supprimer le mot s'il sort de l'écran
+	# Supprimer le mot s'il sort de l'écran (relatif au centre 0,0)
 	var screen_size = get_viewport().get_visible_rect().size
-	if global_position.x < -200 or global_position.x > screen_size.x + 200 or \
-	   global_position.y < -200 or global_position.y > screen_size.y + 200:
+	var half_width = screen_size.x / 2
+	var half_height = screen_size.y / 2
+	if global_position.x < -half_width - 200 or global_position.x > half_width + 200 or \
+	   global_position.y < -half_height - 200 or global_position.y > half_height + 200:
 		queue_free()
 
 func set_word(new_word: String):
@@ -47,3 +49,8 @@ func is_word_active() -> bool:
 
 func get_word() -> String:
 	return word
+
+func is_in_active_zone() -> bool:
+	# Vérifier si le mot est dans le carré de 500x500 pixels au centre
+	var distance_to_center = global_position.distance_to(screen_center)
+	return distance_to_center <= 250  # 250 = 500/2 (rayon du carré)

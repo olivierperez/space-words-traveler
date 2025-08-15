@@ -2,7 +2,6 @@ extends Node2D
 
 @onready var word_spawn_timer: Timer = $WordSpawnTimer
 @onready var word_container: Node2D = $WordContainer
-@onready var back_button: Button = $UI/BackButton
 @onready var current_input_label: Label = $UI/CurrentInputLabel
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
@@ -16,7 +15,6 @@ func _ready():
 	screen_size = get_viewport().get_visible_rect().size
 	word_spawn_timer.timeout.connect(_spawn_word)
 	word_spawn_timer.start()
-	back_button.pressed.connect(_on_back_button_pressed)
 	set_process_input(true)
 
 func _spawn_word():
@@ -31,8 +29,8 @@ func _spawn_word():
 	var spawn_position = _get_random_border_position()
 	word_instance.global_position = spawn_position
 	
-	# Définir la direction vers le centre
-	var center = screen_size / 2
+	# Définir la direction vers le centre (0,0)
+	var center = Vector2.ZERO
 	var direction = (center - spawn_position).normalized()
 	word_instance.set_direction(direction)
 	
@@ -45,20 +43,21 @@ func _spawn_word():
 func _get_random_border_position() -> Vector2:
 	var side = randi() % 4  # 0: haut, 1: droite, 2: bas, 3: gauche
 	
-	match side:
+	# Calculer les positions relatives au centre (0,0)
+	var half_width = screen_size.x / 2
+	var half_height = screen_size.y / 2
+
+	match side
 		0:  # Haut
-			return Vector2(randf_range(0, screen_size.x), -50)
+			return Vector2(randf_range(-half_width, half_width), -half_height - 50)
 		1:  # Droite
-			return Vector2(screen_size.x + 50, randf_range(0, screen_size.y))
+			return Vector2(half_width + 50, randf_range(-half_height, half_height))
 		2:  # Bas
-			return Vector2(randf_range(0, screen_size.x), screen_size.y + 50)
+			return Vector2(randf_range(-half_width, half_width), half_height + 50)
 		3:  # Gauche
-			return Vector2(-50, randf_range(0, screen_size.y))
+			return Vector2(-half_width - 50, randf_range(-half_height, half_height))
 	
 	return Vector2.ZERO
-
-func _on_back_button_pressed():
-	SceneTransition.change_scene("res://scenes/menus/main/MainMenu.tscn")
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -77,13 +76,19 @@ func _check_word():
 	if current_input.is_empty():
 		return
 	
-	# Vérifier si le mot saisi correspond à un mot actif
+	# Vérifier si le mot saisi correspond à un mot actif ET dans la zone active
 	for word_instance in active_words:
-		if word_instance.is_word_active() and word_instance.get_word() == current_input:
+		if word_instance.is_word_active() and word_instance.is_in_active_zone() and word_instance.get_word() == current_input:
 			# Mot trouvé ! Le supprimer
 			active_words.erase(word_instance)
 			word_instance.queue_free()
 			print("Mot correctement tapé : ", current_input)
+			return
+	
+	# Vérifier si le mot existe mais n'est pas dans la zone active
+	for word_instance in active_words:
+		if word_instance.is_word_active() and word_instance.get_word() == current_input and not word_instance.is_in_active_zone():
+			print("Mot trop loin ! Attendez qu'il entre dans la zone grise.")
 			return
 	
 	print("Mot incorrect ou déjà disparu : ", current_input)
