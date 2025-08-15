@@ -60,6 +60,17 @@ func is_in_active_zone() -> bool:
 
 func set_active():
 	_is_in_active_zone = true
+	_update_color()
+
+func set_inactive():
+	_is_in_active_zone = false
+	_update_color()
+
+func _update_color():
+	if is_active and _is_in_active_zone:
+		label.modulate = Color.GREEN
+	else:
+		label.modulate = Color.GRAY
 
 func _on_label_resized() -> void:
 	if label == null: return

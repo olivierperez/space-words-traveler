@@ -18,6 +18,7 @@ func _ready():
 	word_spawn_timer.start()
 	
 	active_zone.body_entered.connect(_body_entered)
+	active_zone.body_exited.connect(_body_exited)
 	
 	set_process_input(true)
 
@@ -41,7 +42,7 @@ func _spawn_word():
 	# Ajouter le mot à la liste des mots actifs
 	active_words.append(word_instance)
 	
-	# Connecter les signaux
+	# Connecter le signal pour être notifié quand le mot devient inactif
 	word_instance.word_became_inactive.connect(_on_word_became_inactive)
 
 func _get_random_border_position() -> Vector2:
@@ -101,11 +102,9 @@ func _body_entered(body: RigidBody2D) -> void:
 	if body is FloatingWord:
 		body.set_active()
 
+func _body_exited(body: RigidBody2D) -> void:
+	if body is FloatingWord:
+		body.set_inactive()
+
 func _on_word_became_inactive(word_instance):
 	active_words.erase(word_instance)
-
-func _on_word_entered_active_zone(word_instance):
-	print("Mot entré dans la zone active: ", word_instance.get_word())
-
-func _on_word_exited_active_zone(word_instance):
-	print("Mot sorti de la zone active: ", word_instance.get_word())
