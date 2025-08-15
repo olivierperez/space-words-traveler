@@ -6,7 +6,7 @@ extends Node2D
 @onready var current_input_label: Label = $UI/CurrentInputLabel
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
-var words = ["ATTACK", "DEFEND", "SHIELD", "PLANET", "SPACESHIP", "CIVILIZATION", "SURVIVE", "TRAVEL", "WORDS", "GLASSES", "WEAKNESS", "CHARGE", "MOBS", "INHABITED", "LIVEABLE"]
+var words = ["ATTAQUER", "DEFENDRE", "BOUCLIER", "PLANETE", "VAISSEAU", "CIVILISATION", "SURVIVRE", "VOYAGER", "MOTS", "LUNETTES", "FAIBLESSE", "CHARGER", "CREATURES", "HABITE", "HABITABLE"]
 
 var screen_size: Vector2
 var current_input: String = ""

@@ -5,7 +5,7 @@ signal word_became_inactive(word_instance)
 @onready var label: Label = $Label
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
-var speed: float = 100.0
+var speed: float = 50.0
 var direction: Vector2 = Vector2.ZERO
 var word: String = ""
 var is_active: bool = true
