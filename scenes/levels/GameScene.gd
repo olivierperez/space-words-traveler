@@ -3,6 +3,7 @@ extends Node2D
 @onready var word_spawn_timer: Timer = $WordSpawnTimer
 @onready var word_container: Node2D = $WordContainer
 @onready var current_input_label: Label = $UI/CurrentInputLabel
+@onready var score_label: Label = $UI/ScoreLabel
 @onready var active_zone: Area2D = $GameZones/ActiveZone
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
@@ -11,6 +12,7 @@ var words = ["ATTAQUER", "DEFENDRE", "BOUCLIER", "PLANETE", "VAISSEAU", "CIVILIS
 var screen_size: Vector2
 var current_input: String = ""
 var active_words: Array = []
+var total_score: int = 0
 
 func _ready():
 	screen_size = get_viewport().get_visible_rect().size
@@ -21,6 +23,7 @@ func _ready():
 	active_zone.body_exited.connect(_body_exited)
 	
 	set_process_input(true)
+	_update_score_display()
 
 func _spawn_word():
 	var word_instance: FloatingWord = word_scene.instantiate()
@@ -84,10 +87,13 @@ func _check_word():
 	# Vérifier si le mot saisi correspond à un mot actif ET dans la zone active
 	for word_instance in active_words:
 		if word_instance.is_word_active() and word_instance.is_in_active_zone() and word_instance.get_word() == current_input:
-			# Mot trouvé ! Le supprimer
+			# Mot trouvé ! Ajouter les points et le supprimer
+			var points = word_instance.get_points()
+			total_score += points
 			active_words.erase(word_instance)
 			word_instance.queue_free()
-			print("Mot correctement tapé : ", current_input)
+			print("Mot correctement tapé : ", current_input, " (+", points, " points)")
+			_update_score_display()
 			return
 	
 	# Vérifier si le mot existe mais n'est pas dans la zone active
@@ -97,6 +103,22 @@ func _check_word():
 			return
 	
 	print("Mot incorrect ou déjà disparu : ", current_input)
+
+func _update_score_display():
+	score_label.text = str(total_score)
+	# Ajuster le pivot au centre du texte après le changement
+	score_label.pivot_offset = score_label.size / 2
+	_pulse_score_animation()
+
+func _pulse_score_animation():
+	# Animation de pulse avec Tween
+	var tween = create_tween()
+	
+	# Agrandir le score, puis revenir à la taille normale
+	tween.tween_property(score_label, "scale", Vector2(1.2, 1.2), 0.1)
+	tween.tween_property(score_label, "scale", Vector2(1.0, 1.0), 0.1)
+
+
 
 func _body_entered(body: RigidBody2D) -> void:
 	if body is FloatingWord:

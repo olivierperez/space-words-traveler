@@ -91,6 +91,17 @@ func _calculate_difficulty():
 	else:
 		_difficulty = Difficulty.HARD
 
+func get_points() -> int:
+	match _difficulty:
+		Difficulty.EASY:
+			return 5
+		Difficulty.MEDIUM:
+			return 10
+		Difficulty.HARD:
+			return 15
+		_:
+			return 0
+
 func _on_label_resized() -> void:
 	if label == null: return
 	var word_width = label.size.x
