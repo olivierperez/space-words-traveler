@@ -3,17 +3,21 @@ extends Node2D
 @onready var word_spawn_timer: Timer = $WordSpawnTimer
 @onready var word_container: Node2D = $WordContainer
 @onready var back_button: Button = $UI/BackButton
+@onready var current_input_label: Label = $UI/CurrentInputLabel
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
 var words = ["ATTACK", "DEFEND", "SHIELD", "PLANET", "SPACESHIP", "CIVILIZATION", "SURVIVE", "TRAVEL", "WORDS", "GLASSES", "WEAKNESS", "CHARGE", "MOBS", "INHABITED", "LIVEABLE"]
 
 var screen_size: Vector2
+var current_input: String = ""
+var active_words: Array = []
 
 func _ready():
 	screen_size = get_viewport().get_visible_rect().size
 	word_spawn_timer.timeout.connect(_spawn_word)
 	word_spawn_timer.start()
 	back_button.pressed.connect(_on_back_button_pressed)
+	set_process_input(true)
 
 func _spawn_word():
 	var word_instance = word_scene.instantiate()
@@ -31,6 +35,9 @@ func _spawn_word():
 	var center = screen_size / 2
 	var direction = (center - spawn_position).normalized()
 	word_instance.set_direction(direction)
+	
+	# Ajouter le mot à la liste des mots actifs
+	active_words.append(word_instance)
 
 func _get_random_border_position() -> Vector2:
 	var side = randi() % 4  # 0: haut, 1: droite, 2: bas, 3: gauche
@@ -49,3 +56,31 @@ func _get_random_border_position() -> Vector2:
 
 func _on_back_button_pressed():
 	SceneTransition.change_scene("res://scenes/menus/main/MainMenu.tscn")
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ENTER:
+			_check_word()
+			current_input = ""
+		elif event.keycode == KEY_BACKSPACE:
+			current_input = current_input.substr(0, current_input.length() - 1)
+		elif event.unicode > 0:
+			current_input += char(event.unicode).to_upper()
+		
+		# Mettre à jour l'affichage de la saisie
+		current_input_label.text = "Saisie : " + current_input
+
+func _check_word():
+	if current_input.is_empty():
+		return
+	
+	# Vérifier si le mot saisi correspond à un mot actif
+	for word_instance in active_words:
+		if word_instance.is_word_active() and word_instance.get_word() == current_input:
+			# Mot trouvé ! Le supprimer
+			active_words.erase(word_instance)
+			word_instance.queue_free()
+			print("Mot correctement tapé : ", current_input)
+			return
+	
+	print("Mot incorrect ou déjà disparu : ", current_input)
