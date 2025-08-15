@@ -14,6 +14,9 @@ var is_active: bool = true
 var screen_center: Vector2
 
 var _is_in_active_zone: bool = false
+var _difficulty: Difficulty
+
+enum Difficulty {EASY, MEDIUM, HARD}
 
 func _ready():
 	# Animation d'apparition
@@ -45,6 +48,7 @@ func _physics_process(delta):
 func set_word(new_word: String):
 	word = new_word
 	label.text = word
+	_calculate_difficulty()
 
 func set_direction(new_direction: Vector2):
 	direction = new_direction
@@ -68,9 +72,24 @@ func set_inactive():
 
 func _update_color():
 	if is_active and _is_in_active_zone:
-		label.modulate = Color.GREEN
+		match _difficulty:
+			Difficulty.EASY:
+				label.modulate = Color.GREEN
+			Difficulty.MEDIUM:
+				label.modulate = Color.ORANGE
+			Difficulty.HARD:
+				label.modulate = Color.RED
 	else:
 		label.modulate = Color.GRAY
+
+func _calculate_difficulty():
+	var word_length = word.length()
+	if word_length <= 4:
+		_difficulty = Difficulty.EASY
+	elif word_length <= 7:
+		_difficulty = Difficulty.MEDIUM
+	else:
+		_difficulty = Difficulty.HARD
 
 func _on_label_resized() -> void:
 	if label == null: return
