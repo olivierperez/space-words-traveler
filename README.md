@@ -3,24 +3,25 @@
   <!-- <img src="./path/to/icon.png" width="215" /> -->
   <br/><br/>
   
-  # Game Name
+  # Space Words Traveler
 
 ![GitHub release](https://img.shields.io/github/v/release/{user-name}/{repository-name}?include_prereleases)
 ![GitHub](https://img.shields.io/github/license/{user-name}/{repository-name})
 
-  Short description of the game.
+  The Hearth is out of order!
+
+  You pilote a spceship to save the part of the remaining civilisation.
+  You'll go from planets to planets to find a liveable one, but they are already inhabited.
+  The mobs living in them fell attacked, they will attack you back.
+  
+  Hopefully, you have glasses to see their weaknesses. It's the word you have to enter to make the disappear.
+  You need to enter engough of words to charge a shield, to be able to leave the surronding of their planet.
+  
+  You will travel from planets to planets until you find the good one.
 
   <br/>
   <!-- <img src="./path/to/game.gif" width="600" /> -->
 </div>
-
-
-## Quick start
-
-When forking this template you should:
-- [ ] Read the [Architecture document](ARCHITECTURE.md)
-- [ ] Update this README.md file & remove the "Quick start" section
-- [ ] Update config in `.github` folder and sub-folders
 
 
 ## Feature
