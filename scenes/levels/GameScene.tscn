@@ -126,7 +126,7 @@ offset_top = 56.0
 offset_right = 175.0
 offset_bottom = 102.0
 max_value = 500
-shield_1 = 100
+shield_1 = 300
 shield_2 = 400
 shield_3 = 450
 
