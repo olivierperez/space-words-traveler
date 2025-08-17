@@ -4,6 +4,7 @@ extends Node2D
 @onready var word_container: Node2D = $WordContainer
 @onready var current_input_label: Label = $UI/CurrentInputLabel
 @onready var score_label: Label = $UI/ScoreLabel
+@onready var score_bar: ScoreBar = $UI/ScoreBar
 @onready var active_zone: Area2D = $GameZones/ActiveZone
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
@@ -109,6 +110,9 @@ func _update_score_display():
 	# Ajuster le pivot au centre du texte après le changement
 	score_label.pivot_offset = score_label.size / 2
 	_pulse_score_animation()
+	
+	# Update the ScoreBar
+	score_bar.set_value(total_score)
 
 func _pulse_score_animation():
 	# Animation de pulse avec Tween
