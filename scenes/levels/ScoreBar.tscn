@@ -16,6 +16,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 texture = ExtResource("1_dp3hx")
 script = ExtResource("2_ej0y5")
+shield_1 = 30
+shield_2 = 40
+shield_3 = 45
 
 [node name="Progression" type="TextureRect" parent="."]
 layout_mode = 1
