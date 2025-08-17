@@ -28,7 +28,7 @@ func _animate_to_target():
 func _update_progression(value: int):
 	current_value = value
 	var progress_ratio = float(current_value) / float(max_value)
-	progression.scale.x = progress_ratio
+	progression.size.x = progress_ratio * progression.texture.get_width()
 
 func _on_animation_complete():
 	current_value = target_value

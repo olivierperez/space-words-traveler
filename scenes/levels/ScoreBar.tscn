@@ -23,3 +23,5 @@ anchors_preset = -1
 offset_right = 350.0
 offset_bottom = 46.0
 texture = ExtResource("2_gr211")
+expand_mode = 1
+stretch_mode = 1
