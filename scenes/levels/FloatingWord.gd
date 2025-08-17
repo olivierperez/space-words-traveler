@@ -7,7 +7,7 @@ signal word_became_inactive(word_instance)
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
-var speed: float = 50.0
+var speed: float = 30.0
 var direction: Vector2 = Vector2.ZERO
 var word: String = ""
 var is_active: bool = true
