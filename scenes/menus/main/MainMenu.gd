@@ -2,15 +2,16 @@ extends Control
 
 @onready var quit_dialog = %QuitDialog
 @onready var start_button: Button = %StartButton
+@onready var levels_container: GridContainer = %LevelsContainer
 
 
 func _ready():
-	LevelConfig.set_level(1)
 	ProgressionService.init()
-	start_button.grab_focus()
+	_add_levels_button()
 
 
-func _on_start_button_pressed():
+func _on_start_button_pressed(level: int):
+	LevelConfig.set_level(level)
 	SceneTransition.change_scene("res://scenes/levels/GameScene.tscn")
 
 
@@ -28,3 +29,16 @@ func _on_quit_dialog_confirmed():
 
 func _ask_to_confirm_quit():
 	quit_dialog.pop_in()
+
+
+func _add_levels_button() -> void:
+	for level in 20:
+		var button = Button.new()
+		button.text = str(level + 1)
+		button.pressed.connect(_on_start_button_pressed.bind(level + 1))
+		var progression = ProgressionService.data
+		if level > progression.level_reached:
+			button.disabled = true
+		levels_container.add_child(button)
+	
+	levels_container.get_child(0).grab_focus()

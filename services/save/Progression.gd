@@ -2,8 +2,8 @@ extends Node
 class_name Progression
 
 
-var coins: int = 0
+var level_reached: int = 1
 
 
-func _init(initial_coins: int):
-	self.coins = initial_coins
+func _init(initial_level: int):
+	self.level_reached = initial_level

@@ -37,12 +37,12 @@ func _load():
 
 func _serialize(progression: Progression) -> String:
 	return JSON.stringify({
-		"coins": progression.coins
+		"level_reached": progression.level_reached
 	})
 
 
 func _parse(json: String) -> Progression:
 	var dict = JSON.parse_string(json)
 	return Progression.new(
-		dict["coins"]
+		dict["level_reached"]
 	)
