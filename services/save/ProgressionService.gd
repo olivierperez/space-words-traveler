@@ -31,6 +31,7 @@ func _load():
 		var file = FileAccess.open(dir_path + filename, FileAccess.READ)
 		var loaded_data = _parse(file.get_as_text())
 		file.close()
+		prints("Loaded reached level:", loaded_data)
 		return loaded_data
 	else:
 		return Progression.new(0)

@@ -9,6 +9,7 @@ const MAX_LEVEL:float = 20
 
 
 func set_level(level: int) -> void:
+	prints("Changing level:", level)
 	self.current_level = level
 	words_speed = FloatRange.new(
 		_leveled(level, 20, 50), # min

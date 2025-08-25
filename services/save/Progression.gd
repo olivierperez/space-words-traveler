@@ -2,7 +2,7 @@ extends Node
 class_name Progression
 
 
-var level_reached: int = 1
+var level_reached: int = 0
 
 
 func _init(initial_level: int):
