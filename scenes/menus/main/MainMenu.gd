@@ -5,6 +5,7 @@ extends Control
 
 
 func _ready():
+	LevelConfig.set_level(1)
 	ProgressionService.init()
 	start_button.grab_focus()
 

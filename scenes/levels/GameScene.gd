@@ -76,10 +76,14 @@ var current_input: String = ""
 var active_words: Array = []
 var total_score: int = 0
 
+
+func _init() -> void:
+	words = words.filter(func (s: String): return LevelConfig.allow_word(s))
+
 func _ready():
 	screen_size = get_viewport().get_visible_rect().size
 	word_spawn_timer.timeout.connect(_spawn_word)
-	word_spawn_timer.start()
+	word_spawn_timer.start(LevelConfig.rand_words_spawn_interval())
 	
 	active_zone.body_entered.connect(_body_entered)
 	active_zone.body_exited.connect(_body_exited)

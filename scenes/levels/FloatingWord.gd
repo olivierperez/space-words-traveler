@@ -22,6 +22,7 @@ func _ready():
 	# Animation d'apparition
 	animation_player.play("fade_in")
 	screen_center = Vector2.ZERO  # Le centre du jeu est maintenant en (0,0)
+	speed = LevelConfig.rand_words_speed()
 
 func _physics_process(delta):
 	# Déplacer le mot vers le centre en utilisant move_and_collide
