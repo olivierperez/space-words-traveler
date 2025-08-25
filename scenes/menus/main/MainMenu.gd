@@ -33,11 +33,12 @@ func _ask_to_confirm_quit():
 
 func _add_levels_button() -> void:
 	for level in 20:
+		var human_level = level + 1
 		var button = Button.new()
-		button.text = str(level + 1)
-		button.pressed.connect(_on_start_button_pressed.bind(level + 1))
+		button.text = str(human_level)
+		button.pressed.connect(_on_start_button_pressed.bind(human_level))
 		var progression = ProgressionService.data
-		if level > progression.level_reached:
+		if human_level > progression.level_reached:
 			button.disabled = true
 		levels_container.add_child(button)
 	

@@ -13,6 +13,7 @@ func init():
 
 
 func save(progression: Progression):
+	prints("saving progression, level:", progression.level_reached)
 	data = progression
 	
 	var content = _serialize(progression)

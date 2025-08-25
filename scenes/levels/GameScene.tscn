@@ -121,7 +121,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScoreBar" parent="UI" instance=ExtResource("3_80jls")]
-anchors_preset = 5
 offset_left = -175.0
 offset_top = 56.0
 offset_right = 175.0
@@ -140,3 +139,5 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="WordContainer" type="Node2D" parent="."]
+
+[connection signal="level_completed" from="UI/ScoreBar" to="." method="_on_score_bar_level_completed"]

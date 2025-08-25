@@ -8,6 +8,8 @@ extends TextureRect
 @export var shield_2: int
 @export var shield_3: int
 
+signal level_completed
+
 @onready var progression: TextureRect = $Progression
 
 var shield_instances: Array[TextureRect] = []
@@ -22,6 +24,8 @@ func _ready():
 
 func set_value(new_value: int):
 	target_value = min(new_value, max_value)
+	if target_value >= max_value:
+		level_completed.emit()
 	_animate_to_target()
 
 func _animate_to_target():

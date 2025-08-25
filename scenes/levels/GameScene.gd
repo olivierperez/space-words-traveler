@@ -199,3 +199,19 @@ func _body_exited(body: RigidBody2D) -> void:
 
 func _on_word_became_inactive(word_instance):
 	active_words.erase(word_instance)
+
+
+func _on_score_bar_level_completed() -> void:
+	# Stop the game
+	word_spawn_timer.stop()
+	for word: FloatingWord in active_words:
+		word.disappear()
+	
+	# Increment level
+	LevelConfig.increment()
+	var progression = ProgressionService.data
+	progression.level_reached = max(LevelConfig.current_level, progression.level_reached)
+	ProgressionService.save(progression)
+	
+	# Reload
+	SceneTransition.change_scene("res://scenes/levels/GameScene.tscn")

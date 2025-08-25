@@ -43,7 +43,7 @@ func _physics_process(delta):
 	var half_width = screen_size.x / 2
 	var half_height = screen_size.y / 2
 	if global_position.x < -half_width - 200 or global_position.x > half_width + 200 or \
-	   global_position.y < -half_height - 200 or global_position.y > half_height + 200:
+		global_position.y < -half_height - 200 or global_position.y > half_height + 200:
 		queue_free()
 
 func set_word(new_word: String):
@@ -110,3 +110,10 @@ func _on_label_resized() -> void:
 	var rect_shape = RectangleShape2D.new()
 	rect_shape.size = Vector2(word_width, word_height)
 	collision_shape.shape = rect_shape
+
+func disappear() -> void:
+	is_active = false
+	word_became_inactive.emit(self)
+	animation_player.play("fade_out")
+	await animation_player.animation_finished
+	queue_free()

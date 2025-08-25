@@ -1,5 +1,6 @@
 extends Node
 
+var current_level: int
 var words_speed: FloatRange
 var words_spawn_interval: FloatRange
 var words_size: IntRange
@@ -8,6 +9,7 @@ const MAX_LEVEL:float = 20
 
 
 func set_level(level: int) -> void:
+	self.current_level = level
 	words_speed = FloatRange.new(
 		_leveled(level, 20, 50), # min
 		_leveled(level, 30, 70) # max
@@ -31,6 +33,10 @@ func rand_words_spawn_interval() -> float:
 
 func allow_word(word: String) -> bool:
 	return word.length() >= words_size.low and word.length() <= words_size.high
+
+
+func increment() -> void:
+	set_level(current_level + 1)
 
 
 func _leveled(level: int, low: float, high: float) -> float:
