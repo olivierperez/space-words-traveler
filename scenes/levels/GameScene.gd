@@ -7,6 +7,7 @@ extends Node2D
 @onready var score_bar: ScoreBar = $UI/ScoreBar
 @onready var active_zone: Area2D = $GameZones/ActiveZone
 @onready var valid_word_sound: AudioStreamPlayer = $ValidWordSound
+@onready var level_completed_sound: AudioStreamPlayer = $LevelCompletedSound
 
 @export_group("Pitch", "pitch_")
 @export var pitch_min : float = 1.0
@@ -240,6 +241,10 @@ func _on_score_bar_level_completed() -> void:
 	word_spawn_timer.stop()
 	for word: FloatingWord in active_words:
 		word.disappear()
+	
+	# Play level completed sound
+	await get_tree().create_timer(.3).timeout
+	level_completed_sound.play()
 	
 	# Increment level
 	LevelConfig.increment()
