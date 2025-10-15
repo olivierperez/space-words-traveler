@@ -8,6 +8,7 @@ extends Node2D
 @onready var active_zone: Area2D = $GameZones/ActiveZone
 @onready var valid_word_sound: AudioStreamPlayer = $ValidWordSound
 @onready var level_completed_sound: AudioStreamPlayer = $LevelCompletedSound
+@onready var wrong_word_sound: AudioStreamPlayer = $WrongWordSound
 
 @export_group("Pitch", "pitch_")
 @export var pitch_min : float = 1.0
@@ -183,9 +184,15 @@ func _check_word():
 	for word_instance in active_words:
 		if word_instance.is_word_active() and word_instance.get_word() == current_input and not word_instance.is_in_active_zone():
 			print("Mot trop loin ! Attendez qu'il entre dans la zone grise.")
+			_on_wrong_word_entered()
 			return
 	
 	print("Mot incorrect ou déjà disparu : ", current_input)
+	_on_wrong_word_entered()
+
+func _on_wrong_word_entered() -> void:
+	wrong_word_sound.play()
+	last_valid_word_time = 0
 
 func _update_score_display():
 	score_label.text = str(total_score)
