@@ -6,6 +6,14 @@ extends Node2D
 @onready var score_label: Label = $UI/ScoreLabel
 @onready var score_bar: ScoreBar = $UI/ScoreBar
 @onready var active_zone: Area2D = $GameZones/ActiveZone
+@onready var valid_word_sound: AudioStreamPlayer = $ValidWordSound
+
+@export_group("Pitch", "pitch_")
+@export var pitch_min : float = 1.0
+@export var pitch_max: float = 2.0
+@export var pitch_increase: float = 0.1
+## In milliseconds
+@export var pitch_max_interval: int = 3000
 
 var word_scene = preload("res://scenes/levels/FloatingWord.tscn")
 var words = [
@@ -75,6 +83,10 @@ var screen_size: Vector2
 var current_input: String = ""
 var active_words: Array = []
 var total_score: int = 0
+
+# Combo tracking for sound effects
+var last_valid_word_time: int = 0
+var current_pitch: float = 1.0
 
 
 func _init() -> void:
@@ -159,6 +171,10 @@ func _check_word():
 			active_words.erase(word_instance)
 			word_instance.queue_free()
 			print("Mot correctement tapé : ", current_input, " (+", points, " points)")
+			
+			# Play sound with combo pitch scaling
+			_play_valid_word_sound()
+			
 			_update_score_display()
 			return
 	
@@ -187,6 +203,24 @@ func _pulse_score_animation():
 	tween.tween_property(score_label, "scale", Vector2(1.2, 1.2), 0.1)
 	tween.tween_property(score_label, "scale", Vector2(1.0, 1.0), 0.1)
 
+## Play the sound with an increasing pitch
+func _play_valid_word_sound():
+	var current_time = Time.get_ticks_msec()
+	var time_since_last_word = current_time - last_valid_word_time
+	
+	if last_valid_word_time > 0 and time_since_last_word < pitch_max_interval:
+		current_pitch += pitch_increase
+	else:
+		current_pitch = pitch_min
+	
+	current_pitch = min(current_pitch, pitch_max)
+	if current_pitch == pitch_max:
+		current_pitch = pitch_max + randf_range(-.05, .05)
+	
+	valid_word_sound.pitch_scale = current_pitch
+	valid_word_sound.play()
+	
+	last_valid_word_time = current_time
 
 
 func _body_entered(body: RigidBody2D) -> void:

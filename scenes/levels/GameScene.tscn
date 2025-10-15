@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8yay001a2b3c"]
+[gd_scene load_steps=6 format=3 uid="uid://c8yay001a2b3c"]
 
 [ext_resource type="Script" uid="uid://cap7xh1rfchn4" path="res://scenes/levels/GameScene.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://uhiusabusitx" path="res://assets/image/space_background.png" id="2_texture"]
 [ext_resource type="PackedScene" uid="uid://dhukryh3yj80f" path="res://scenes/levels/ScoreBar.tscn" id="3_80jls"]
+[ext_resource type="AudioStream" uid="uid://dyq5xtsrofhm3" path="res://assets/audio/valid-word.wav" id="4_audio"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(500, 500)
@@ -31,6 +32,9 @@ stretch_mode = 4
 
 [node name="WordSpawnTimer" type="Timer" parent="."]
 wait_time = 2.0
+
+[node name="ValidWordSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_audio")
 
 [node name="GameZones" type="Node2D" parent="."]
 
